@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %} {% load static %} {% block body %}
+<h2>Active Listings</h2>
+
+{% for listing in listings%} {% if listing.active %}
+<div class="row row-cols-2 row-cols-md-2 g-4" style="width: 100%; ; padding: 10px; margin: auto;">
+    <div class="card" style="display: flex;">
+      <img
+        src="{{ listing.image_url }}"
+        class="card-img-top"
+        alt="Listing image"
+        onerror="this.onerror=null; this.src='https://user-images.githubusercontent.com/52632898/161646398-6d49eca9-267f-4eab-a5a7-6ba6069d21df.png'"
+      />
+      <div class="card-body">
+        <h5 class="card-title">
+          <center>
+            <strong><h1>{{ listing.title }}</h1></strong>
+          </center>
+        </h5>
+        <p class="card-text">{{ listing.description }}</p>
+        <p class="card-text"><strong>Price (Current Highest Bid)</strong> : ${{ listing.price }}</p>
+        <p class="card-text" style="color: gray">
+          Created at: {{ listing.created_at }}
+        </p>
+        <a href="{% url 'listitem' listing.id%}" class="btn btn-primary">Bid!</a>
+      </div>
+    </div></div>
+<br />{% endif %} {% endfor %}  {% endblock %}

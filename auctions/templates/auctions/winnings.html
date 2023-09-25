@@ -1,0 +1,27 @@
+{% extends 'auctions/layout.html' %} {% load static %} {% block body %} {%if listings != list %} {% for listing in listings %}
+<a href="{% url 'listitem' listing.id%}">
+	<div class="card-master">
+		<div class="card">
+			<img
+				src="{{ listing.image_url }}"
+				class="card-img-top"
+				alt="Listing Image" />
+			<div class="card-body">
+				<h5 class="card-title">
+					<center>
+						<strong><h1>{{ listing.title }}</h1></strong>
+					</center>
+				</h5>
+				<p class="card-text">{{ listing.description }}</p>
+				<p class="card-text"><strong>Price (Current Highest Bid)</strong> : ${{ listing.price }}</p>
+				<p class="card-text" style="color: gray">
+					Created at: {{ listing.created_at }}
+				</p>
+				<a href="#" class="btn btn-primary">Bid!</a>
+			</div>
+		</div>
+	</div>
+</a>
+{% endfor %} {% else %}
+<h1 style="color: Red; text-align: center">No Winnings :(</h1>
+{% endif %} {% endblock body %}

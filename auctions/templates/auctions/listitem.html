@@ -1,0 +1,136 @@
+{% extends "auctions/layout.html" %} {% block body %} {% if message != "" %}
+<div class="alert alert-{{msg_type}}">{{ message }}</div>
+{% endif %}
+{% if user.username == listings.winner %}<div class="alert alert-success">You are the winner of this auction!!</div>{% endif %}
+
+<div class="jumbotron text-center" style="padding: 3% 10%">
+  <br />
+  <br />
+  <h1><strong>{{listings.title}}</strong></h1>
+  <br />
+  <br />
+  <img
+    src="{{listings.image_url}}"
+    alt="indeximage"
+    style="height: 350px"
+    class="embed-responsive"
+  />
+  <br />
+  <br />
+  <br />
+  <p class="lead" align="justify">
+    <strong>Description : </strong> {{listings.description}}
+  </p>
+  <p class="lead" align="justify">
+    <strong>Category : </strong>{{listings.category}}
+  </p>
+  <p class="lead" align="justify">
+    <strong>Current Bid Price : </strong>{{listings.price}}$
+  </p>
+  <p class="lead" align="justify">
+    <strong>Seller : </strong>{{listings.user}}
+  </p>
+  <p class="lead" align="justify">
+    <strong>Created on : </strong>{{listings.created_at}}
+  </p>
+  <br />
+
+  {% if added != "False" %}
+  <!-- <input type="button" class="btn btn-danger btn-lg" name="remove" placeholder="Remove from Watchlist"> -->
+  <a
+    href="{% url 'watchlistadd' listings.id %}"
+    class="btn btn-danger btn-lg"
+    name="remove"
+    >Remove from Watchlist</a
+  >
+  {% else %}
+  <!-- <input type="button" class="btn btn-success btn-lg" name="addto" placeholder="Add to Watchlist"> -->
+  <a
+    href="{% url 'watchlistadd' listings.id %}"
+    class="btn btn-success btn-lg"
+    name="addto"
+    >Add to Watchlist</a
+  >
+  {% endif %}
+  <br />
+  <br />
+  {% if user != listings.user %}
+  <p class="lead" align="justify"><strong>Place your Bid : </strong></p>
+  <form action="{% url 'addbid' listings.id %}" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <input
+        class="form-control"
+        type="text"
+        name="newbid"
+        placeholder="Your Bid"
+      />
+    </div>
+    <p align="justify">
+      <input class="btn btn-primary" type="submit" value="Submit" />
+    </p>
+  </form>
+  {% endif %}
+
+  <br />
+  <br />
+  <br />
+
+  <!-- Displaying comments-->
+  <div class="jumbotron text-center">
+    <!-- Title -->
+    <h2 class="card-title h2">COMMENTS</h2>
+    <!-- Subtitle -->
+    <p class="lead my-4">These are the comments left by other users.</p>
+
+    {% if comment %} {% for commen in comment %}
+    <br />
+    <!-- Grid row -->
+    <div class="card text-left">
+      <h5 class="card-header h5">{{commen.user}}</h5>
+      <div class="card-body">
+        <!-- <h5 class="card-title">Rating :</h5> -->
+        <p class="lead">{{commen.text}}</p>
+        <p class="card-text">{{commen.created_at}}</p>
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <div class="text-center">
+      <!-- Text -->
+      <br />
+      <br />
+      <p class="lead">No Comments Found</p>
+    </div>
+    {% endif %}
+  </div>
+  <!-- End displaying comments -->
+
+  {% if user != listings.user %}
+  <!-- Displaying comments-->
+  <div class="jumbotron text-center">
+    <!-- Title -->
+    <h2 class="card-title h2">ADD COMMENT</h2>
+
+    <form action="{% url 'addcomment' listings.id %}" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <textarea
+          class="form-control"
+          name="comment"
+          rows="4"
+          placeholder="Your Comment"
+        ></textarea>
+      </div>
+      <p align="justify">
+        <input class="btn btn-primary" type="submit" value="Submit" />
+      </p>
+    </form>
+  </div>
+  <!-- End add comments -->
+  {% endif %} {% if user == listings.user %}
+  <a href="{% url 'closebid' listings.id %}" class="btn btn-info btn-lg">
+    Close Bid
+  </a>
+  {% endif %}
+</div>
+{% endblock %}
